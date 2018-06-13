@@ -9,32 +9,32 @@ import random
 # that and otherwise cleaning it up, though.
 
 
-leonardo_nums = [1, 1]
+_leonardo_nums = [1, 1]
 
 
 def L(k):
     try:
-        return leonardo_nums[k]
+        return _leonardo_nums[k]
     except IndexError:
-        while len(leonardo_nums) <= k:
-            leonardo_nums.append(leonardo_nums[-2] + leonardo_nums[-1] + 1)
-        return leonardo_nums[k]
+        while len(_leonardo_nums) <= k:
+            _leonardo_nums.append(_leonardo_nums[-2] + _leonardo_nums[-1] + 1)
+        return _leonardo_nums[k]
 
 
 def smoothsort(arr):
-    heap, size_list = create_heap(arr)
-    sorted_arr = sort_heap(heap, size_list)
+    heap, size_list = _create_heap(arr)
+    sorted_arr = _sort_heap(heap, size_list)
     return sorted_arr
 
 
-def sort_heap(heap, size_list):
+def _sort_heap(heap, size_list):
     sorted_arr = []
     while heap:
-        sorted_arr.append(dequeue_max(heap, size_list))
+        sorted_arr.append(_dequeue_max(heap, size_list))
     return sorted_arr
 
 
-def dequeue_max(heap, size_list):
+def _dequeue_max(heap, size_list):
     max_val = heap.pop()
     removed_size = size_list.pop()
     # case 1: rightmost tree has a single node
@@ -51,30 +51,30 @@ def dequeue_max(heap, size_list):
         left_size_idx = len(size_list) - 2
         right_size_idx = len(size_list) - 1
         # fix left child
-        idx, size_idx = fix_roots(heap, size_list, left_idx, left_size_idx)
-        sift_down(heap, idx, size_list[size_idx])
+        idx, size_idx = _fix_roots(heap, size_list, left_idx, left_size_idx)
+        _sift_down(heap, idx, size_list[size_idx])
         # fix right child
-        idx, size_idx = fix_roots(heap, size_list, right_idx, right_size_idx)
-        sift_down(heap, idx, size_list[size_idx])
+        idx, size_idx = _fix_roots(heap, size_list, right_idx, right_size_idx)
+        _sift_down(heap, idx, size_list[size_idx])
     return max_val
 
 
-def create_heap(arr):
+def _create_heap(arr):
     size_list = []
     for heap_end in range(0, len(arr)):
         # Update the sizes of the trees in the forest
-        add_new_root(size_list)
+        _add_new_root(size_list)
 
         # Swap the root nodes of the trees. Return [heap index, size index]
-        idx, size_idx = fix_roots(arr, size_list, heap_end, len(size_list) - 1)
+        idx, size_idx = _fix_roots(arr, size_list, heap_end, len(size_list) - 1)
 
         # Fix the tree that now has the new node
-        sift_down(arr, idx, size_list[size_idx])
+        _sift_down(arr, idx, size_list[size_idx])
 
     return arr, size_list
 
 
-def add_new_root(size_list):
+def _add_new_root(size_list):
     # case 1: Empty forest. Add L_1 tree.
     if len(size_list) == 0:
         size_list.append(1)
@@ -96,7 +96,7 @@ def add_new_root(size_list):
 
 # modifies 'heap' in place, assuming an implicit Leonardo heap structure exists
 # with trees having sizes in the order given by 'sizes'
-def fix_roots(heap, sizes, start_heap_idx, start_size_idx):
+def _fix_roots(heap, sizes, start_heap_idx, start_size_idx):
     # variables in this function are referring to indexes
     cur = start_heap_idx
     size_cur = start_size_idx
@@ -125,7 +125,7 @@ def fix_roots(heap, sizes, start_heap_idx, start_size_idx):
     return (cur, size_cur)
 
 
-def sift_down(heap, root_idx, tree_size):
+def _sift_down(heap, root_idx, tree_size):
     cur = root_idx
     # continue iterating until there are no child nodes
     while tree_size > 1:
